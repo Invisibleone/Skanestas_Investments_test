@@ -1,0 +1,4 @@
+setuptools~=60.0.0
+Django~=4.0.3
+fastparquet~=0.8.0
+djangorestframework~=3.13.1

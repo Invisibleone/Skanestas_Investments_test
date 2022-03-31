@@ -1,0 +1,48 @@
+{% load static %}
+<html>
+<head>
+  <title>django-chartjs line chart demo</title>
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+
+</head>
+
+<body>
+  <h1>Generated prices</h1>
+
+  <canvas id="myChart" width="1500" height="500"></canvas>
+
+  <script type="text/javascript">
+      var chart = null
+      $.get('{% url 'prices:json_detail' pid %}', function (data) {
+          var ctx = $("#myChart").get(0).getContext("2d");
+          chart = new Chart(ctx, {
+              type: 'line',
+              data: data,
+              options: {
+                  responsive: false
+              }
+          });
+      });
+
+      function refresh() {
+          console.log('tick')
+          $.get('{% url 'prices:json_detail' pid %}', function(data) {
+              chart.data.datasets[0].data = data.datasets[0].data
+              chart.data.labels = data.labels
+              chart.update()
+          });
+          setTimeout(refresh, 1000);
+      }
+
+      $(function(){
+          refresh();
+      });
+
+  </script>
+
+<script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/highcharts/highcharts.js' %}"></script>
+
+</body>
+</html>
